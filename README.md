@@ -30,7 +30,7 @@ Blockagotchi is a blockchain-based game that brings the nostalgia of Tamagotchi 
 ### Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/blockagotchi.git
+git clone https://github.com/souzavinny/blockagotchi.git
 cd blockagotchi` 
 ```
 
@@ -118,7 +118,7 @@ localhost:8080/inspect/ranking
 		│   	└── advance_handler.py
 		└──inspect/
 │   	 		└── inspect_handler.py
-├── cartgotchi.py
+├── blockagotchi.py
 ├── user.py
 ├── shop.py
 ├── dapp.py
