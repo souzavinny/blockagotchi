@@ -94,18 +94,18 @@ class BlockaGotchi:
         self.update_age()
         age = self.age
 
-        if self.stage == "Blob" and age >= 0:
+        if self.stage == "Blob" and age >= 3:
             self.stage = "Child"
             self.type = self.determine_type()
             logger.info(f"{self.name} has evolved to Child stage as a {self.type}.")
-        elif self.stage == "Child" and age >= 14:
+        elif self.stage == "Child" and age >= 7:
             self.stage = "Teen"
             logger.info(f"{self.name} has evolved to Teen stage as a {self.type}.")
-        elif self.stage == "Teen" and age >= 21:
+        elif self.stage == "Teen" and age >= 14:
             self.stage = "Adult"
             self.type = self.determine_adult_type()
             logger.info(f"{self.name} has evolved to Adult stage as a {self.type}.")
-        elif self.stage == "Adult" and age >= 28:
+        elif self.stage == "Adult" and age >= 21:
             self.stage = "Old"
             logger.info(f"{self.name} has evolved to Old stage as a {self.type}.")
 
