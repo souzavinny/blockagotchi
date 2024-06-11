@@ -136,7 +136,7 @@ class AdvanceHandler:
         try:
             user = self.state["users"].get(user_id)
             if user and user.blockagotchi:
-                user.blockagotchi.feed(food_type)
+                user.blockagotchi.feed(food_type.lower())
                 notice_payload = self.encode({"event": "feed_blockagotchi", "user_id": user_id, "blockagotchi_id": user.blockagotchi.id, "food_type": food_type})
                 self.create_notice(notice_payload)
                 logger.info(f"{user.blockagotchi.name} was fed with {food_type}.")
@@ -156,7 +156,7 @@ class AdvanceHandler:
         try:
             user = self.state["users"].get(user_id)
             if user and user.blockagotchi:
-                user.blockagotchi.walk(walk_type)
+                user.blockagotchi.walk(walk_type.lower())
                 notice_payload = self.encode({"event": "walk_blockagotchi", "user_id": user_id, "blockagotchi_id": user.blockagotchi.id, "walk_type": walk_type})
                 self.create_notice(notice_payload)
                 logger.info(f"{user.blockagotchi.name} went for a {walk_type} walk.")
@@ -176,7 +176,7 @@ class AdvanceHandler:
         try:
             user = self.state["users"].get(user_id)
             if user and user.blockagotchi:
-                user.blockagotchi.bathe(bath_type, is_paid)
+                user.blockagotchi.bathe(bath_type.lower(), is_paid)
                 notice_payload = self.encode({"event": "bathe_blockagotchi", "user_id": user_id, "blockagotchi_id": user.blockagotchi.id, "bath_type": bath_type, "is_paid": is_paid})
                 self.create_notice(notice_payload)
                 logger.info(f"{user.blockagotchi.name} had a {bath_type} bath. Paid: {is_paid}")

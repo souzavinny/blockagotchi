@@ -2,7 +2,6 @@ from datetime import datetime, timedelta
 import logging
 from typing import Dict, Optional, List
 from shop import Item
-from model_type import score  # Importa a função `score` gerada pelo m2cgen
 
 logger = logging.getLogger(__name__)
 
@@ -93,54 +92,49 @@ class BlockaGotchi:
 
     def evolve(self) -> None:
         self.update_age()
-        prev_stage = self.stage
-        stages = {'Blob': 0, 'Child': 1, 'Teen': 2, 'Adult': 3, 'Old': 4}
+        age = self.age
 
-        # Atualizar o estágio de acordo com a idade
-        if self.stage == 'Blob' and self.age >= 7:
-            self.stage = 'Child'
-        elif self.stage == 'Child' and self.age >= 14:
-            self.stage = 'Teen'
-        elif self.stage == 'Teen' and self.age >= 21:
-            self.stage = 'Adult'
-        elif self.stage == 'Adult' and self.age >= 28:
-            self.stage = 'Old'
+        if self.stage == "Blob" and age >= 0:
+            self.stage = "Child"
+            self.type = self.determine_type()
+            logger.info(f"{self.name} has evolved to Child stage as a {self.type}.")
+        elif self.stage == "Child" and age >= 14:
+            self.stage = "Teen"
+            logger.info(f"{self.name} has evolved to Teen stage as a {self.type}.")
+        elif self.stage == "Teen" and age >= 21:
+            self.stage = "Adult"
+            self.type = self.determine_adult_type()
+            logger.info(f"{self.name} has evolved to Adult stage as a {self.type}.")
+        elif self.stage == "Adult" and age >= 28:
+            self.stage = "Old"
+            logger.info(f"{self.name} has evolved to Old stage as a {self.type}.")
 
-        # Se houve mudança de estágio, prever o próximo tipo
-        if self.stage != prev_stage:
-            features = [
-                self.age,
-                self.food_history.count("Fish"),
-                self.food_history.count("Meat"),
-                self.food_history.count("Vegetal"),
-                self.food_history.count("Fruta"),
-                len([date for date in self.walk_dates if date >= get_current_time() - timedelta(days=30)]),
-                1 if self.condition == "Muscle" else 2 if self.condition == "Normal" else 3,
-                self.happiness,
-                stages[prev_stage]
-            ]
+    def determine_type(self) -> Optional[str]:
+        if self.food_history.count('fish') > max(self.food_history.count('meat'), self.food_history.count('vegetal')):
+            return 'Cat'
+        elif self.food_history.count('meat') > max(self.food_history.count('fish'), self.food_history.count('vegetal')):
+            return "Dog"
+        else:
+            return "Bird"
 
-            types = {
-                'Blob': ['Cat', 'Dog', 'Bird'],
-                'Child': ['Cat', 'Dog', 'Bird'],
-                'Teen': {
-                    'Cat': ['Lion', 'Tiger'],
-                    'Dog': ['Wolf'],
-                    'Bird': ['Eagle', 'Duck', 'Pigeon']
-                }
-            }
-
-            if prev_stage in ['Blob', 'Child']:
-                next_type_code = score(features).index(max(score(features)))
-                self.type = list(types[prev_stage])[next_type_code]
-            elif prev_stage == 'Teen':
-                if self.type in types['Teen']:
-                    next_type_code = score(features).index(max(score(features)))
-                    self.type = list(types['Teen'][self.type])[next_type_code]
+    def determine_adult_type(self) -> Optional[str]:
+        if self.stage == "Teen":
+            if self.type == "Cat":
+                if self.food_history.count("Fish") > self.food_history.count('meat'):
+                    return "Tiger"
                 else:
-                    self.type = None
+                    return "Lion"
+            elif self.type == "Dog":
+                return "Wolf"
+            elif self.type == "Bird":
+                if self.food_history.count('vegetal') > max(self.food_history.count('meat'), self.food_history.count('fish')):
+                    return "Pigeon"
+                elif self.food_history.count('meat') > max(self.food_history.count('fish'), self.food_history.count('vegetal')):
+                    return "Eagle"
+                else:
+                    return "Duck"
+        return None
 
-            logger.info(f"{self.name} has evolved to {self.stage} stage and {self.type} type.")
 
     def update_biotype(self) -> None:
         feeding_frequency = len(self.food_history) / (self.get_age() + 1)
