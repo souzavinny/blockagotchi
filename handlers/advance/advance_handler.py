@@ -117,7 +117,7 @@ class AdvanceHandler:
             else:
                 self.wallet.ether_transfer(user_id, self.dao_address, 1)
                 birth_time = get_current_time()
-                blockagotchi = blockagotchi(user_id, name, birth_time, self.GLOBAL_IDS)
+                blockagotchi = BlockaGotchi(user_id, name, birth_time, self.GLOBAL_IDS)
                 self.GLOBAL_IDS += 1
                 user.add_blockagotchi(blockagotchi)
                 self.state["blockagotchis"][blockagotchi.id] = blockagotchi
@@ -226,7 +226,7 @@ class AdvanceHandler:
                 logger.info(f"User {user_id} applied item {item_id} to their blockagotchi.")
                 return "accept"
             else:
-                error_msg = f"User {user_id} does not have a blockagotchi to apply item {item_id} to."
+                error_msg = f"User {user_id} got an error while trying to apply item {item_id}"
                 logger.info(error_msg)
                 self.create_report(self.encode(error_msg))
                 return "reject"

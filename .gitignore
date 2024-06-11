@@ -3,3 +3,4 @@
 __pycache__
 .docker
 .vscode
+model/blockagotchi_type_model.pkl
