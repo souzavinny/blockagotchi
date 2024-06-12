@@ -1,11 +1,3 @@
-# build stage: generates model
-FROM python:3.8.10 as model
-
-WORKDIR /usr/src/app
-COPY ./model .
-RUN pip3 install -r requirements.txt
-RUN python3 build_model.py
-
 # syntax=docker.io/docker/dockerfile:1
 FROM --platform=linux/riscv64 cartesi/python:3.10-slim-jammy
 
@@ -40,7 +32,6 @@ find /usr/local/lib -type d -name __pycache__ -exec rm -r {} +
 EOF
 
 COPY ./dapp.py ./blockagotchi.py ./user.py ./shop.py ./handlers/advance/*.py ./handlers/inspect/*.py . 
-COPY --from=model /usr/src/app/model_type.py .
 
 ENV ROLLUP_HTTP_SERVER_URL="http://127.0.0.1:5004"
 
